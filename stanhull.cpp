@@ -5,7 +5,7 @@
 #include <math.h>
 #include <float.h>
 
-#include "hull.h"
+#include <stanhull.h>
 
 /*----------------------------------------------------------------------
 		Copyright (c) 2004 Open Dynamics Framework Group

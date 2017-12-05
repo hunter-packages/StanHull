@@ -1,6 +1,5 @@
-#ifndef HULL_H
-
-#define HULL_H
+#ifndef STANHULL_H
+#define STANHULL_H
 
 /*----------------------------------------------------------------------
 		Copyright (c) 2004 Open Dynamics Framework Group
@@ -28,6 +27,8 @@
 		IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 		THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------*/
+
+#include <stanhull/STANHULL_EXPORT.h>
 
 // Modified by Lasse Oorni for Urho3D
 
@@ -128,7 +129,7 @@ enum HullError
 	QE_FAIL           // failed.
 };
 
-class HullLibrary
+class STANHULL_EXPORT HullLibrary
 {
 public:
 
@@ -152,5 +153,4 @@ private:
 
 }
 
-#endif
-
+#endif // STANHULL_H
