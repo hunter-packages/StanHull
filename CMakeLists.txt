@@ -1,79 +1,76 @@
-#
-# Copyright (c) 2008-2016 the Urho3D project.
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
+# Copyright (c) 2016 David Hirvonen
+# Copyright (c) 2017 Ruslan Baratov
+# All rights reserved.
 
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.2)
+project(stanhull VERSION 1.0.0)
 
-project(StanHull VERSION 1.0.0)
+add_library(stanhull stanhull.cpp stanhull.h)
 
-add_library(StanHull hull.cpp hull.h)
+set(generated_headers "${CMAKE_CURRENT_BINARY_DIR}/generated_headers")
+set(stanhull_export "${generated_headers}/stanhull/STANHULL_EXPORT.h")
+include(GenerateExportHeader)
+generate_export_header(stanhull EXPORT_FILE_NAME ${stanhull_export})
 
-#### install 
+target_include_directories(
+    stanhull
+    PUBLIC
+    "$<BUILD_INTERFACE:${generated_headers}>"
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}>"
+)
 
-set(TARGET_PUBLIC_HDRS hull.h)
+# Installation (https://github.com/forexample/package-example) {
 
 set(config_install_dir "lib/cmake/${PROJECT_NAME}")
 set(include_install_dir "include")
 
 set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
 
-# Configuration
 set(version_config "${generated_dir}/${PROJECT_NAME}ConfigVersion.cmake")
 set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
-set(targets_export_name "${PROJECT_NAME}Targets")
+set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
 set(namespace "${PROJECT_NAME}::")
 
 include(CMakePackageConfigHelpers)
 
+# Use:
+#   * PROJECT_VERSION
 write_basic_package_version_file(
-  "${version_config}" COMPATIBILITY SameMajorVersion
-  )
+    "${version_config}" COMPATIBILITY SameMajorVersion
+)
 
+# Use variables:
+#   * TARGETS_EXPORT_NAME
+#   * PROJECT_NAME
 configure_package_config_file(
-  "cmake/Config.cmake.in"
-  "${project_config}"
-  INSTALL_DESTINATION "${config_install_dir}"
-  )
+    "cmake/Config.cmake.in"
+    "${project_config}"
+    INSTALL_DESTINATION "${config_install_dir}"
+)
 
 install(
-  TARGETS StanHull
-  EXPORT "${targets_export_name}"
-  LIBRARY DESTINATION "lib"
-  ARCHIVE DESTINATION "lib"
-  RUNTIME DESTINATION "bin"
-  INCLUDES DESTINATION "${include_install_dir}"
-  )
+    TARGETS stanhull
+    EXPORT "${TARGETS_EXPORT_NAME}"
+    LIBRARY DESTINATION "lib"
+    ARCHIVE DESTINATION "lib"
+    RUNTIME DESTINATION "bin"
+    INCLUDES DESTINATION "${include_install_dir}"
+)
 
 install(
-  FILES "${TARGET_PUBLIC_HDRS}"
-  DESTINATION "${include_install_dir}/${PROJECT_NAME}"
-  )
+    FILES "${stanhull_export}" stanhull.h
+    DESTINATION "${include_install_dir}/${PROJECT_NAME}"
+)
 
 install(
-  FILES "${project_config}" "${version_config}"
-  DESTINATION "${config_install_dir}"
-  )
+    FILES "${project_config}" "${version_config}"
+    DESTINATION "${config_install_dir}"
+)
 
 install(
-  EXPORT "${targets_export_name}"
-  NAMESPACE "${namespace}"
-  DESTINATION "${config_install_dir}"
-  )
+    EXPORT "${TARGETS_EXPORT_NAME}"
+    NAMESPACE "${namespace}"
+    DESTINATION "${config_install_dir}"
+)
+
+# }
